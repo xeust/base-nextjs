@@ -1,63 +1,118 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+
+const ToDo = ({content, isCompleted, onChange, onDelete}) => {
+  return (
+  <div className={styles.card}>
+    <div className={styles.text} style={{ textDecoration: isCompleted ? "line-through" : "" }}>{content}</div>
+    <input type="checkbox" checked={isCompleted} onChange={onChange} />
+    <button onClick={onDelete}>&#10006;</button>
+  </div>
+  )
+}
 
 export default function Home() {
+
+  const [newText, setNewText] = useState('');
+
+  const [todos, setTodos] = useState([]);
+
+  const getToDos = async () => {
+    const resp = await fetch('api/todos');
+    const toDos = await resp.json();
+    setTodos(toDos);
+  }
+  
+  const createToDo = async () => {
+    const resp = await fetch('api/todos', 
+      {
+        method: 'post', 
+        body: JSON.stringify({content: newText})
+      }
+    );
+    await getToDos();
+  }
+  
+  const updateToDo = async (todo) => {
+    let newBody = { 
+      ...todo,
+      isCompleted: !todo.isCompleted
+    };
+    const resp = await fetch(`api/todos/${todo.key}`, 
+      {
+        method: 'put', 
+        body: JSON.stringify(newBody)
+      }
+    );
+
+    await getToDos();
+  }
+  
+  const deleteToDo = async (tid) => {
+    const resp = fetch(`api/todos/${tid}`, {method: 'delete'});
+    setTimeout(getToDos, 100);
+  }
+
+  useEffect(() => {
+    getToDos();
+  }, [])
+
+  const completed = todos.filter(todo => todo.isCompleted);
+  const notCompleted = todos.filter(todo => !todo.isCompleted);
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Deta + Next.js</title>
         <link rel="icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque&family=Space+Grotesk&display=swap" rel="stylesheet" />
       </Head>
+      <header className={styles.header}>
+        <h2>
+          To Dos with <a href="https://nextjs.org">Next.js</a> + <a href="https://www.deta.sh">Deta Base</a>
+          </h2>
+      </header>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className={styles.incomplete}>
+          <div><input onChange={e => setNewText(e.target.value)}></input>
+          <button onClick={createToDo}>ADD</button></div>
+          <div>
+          {notCompleted.map(todo => 
+            <ToDo 
+              key={todo.key} 
+              content={todo.content} 
+              isCompleted={todo.isCompleted} 
+              onChange={() => updateToDo(todo)}
+              onDelete={() => deleteToDo(todo.key)}
+            />
+          )}
+          </div>
+        </div>
+        <div className={styles.complete}>
+          <div>DONE</div>
+          <div>
+          {completed.map(todo => 
+            <ToDo 
+              key={todo.key} 
+              content={todo.content} 
+              isCompleted={todo.isCompleted}
+              onChange={() => updateToDo(todo)}
+              onDelete={() => deleteToDo(todo.key)}
+            />
+          )}
+          </div>
         </div>
       </main>
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://deta.sh?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
+          Powered by
+          <img src="/deta.svg" alt="Deta Logo" className={styles.logo} />&nbsp;Deta & Next.js
         </a>
       </footer>
     </div>
