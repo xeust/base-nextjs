@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) application that implements To Dos. It uses [Deta Base](https://docs.deta.sh/docs/base/about) for persistent To Dos.
 
 ## Getting Started
 
@@ -14,17 +14,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-## Learn More
+## Interacting with Deta Base
 
-To learn more about Next.js, take a look at the following resources:
+A valid Deta Project key is required to interact with the database. You need to set an environment variable `DETA_PROJ_KEY` which will be read the `pages/api/todos/index.js` and `pages/api/todos/[tid].js` files.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+In production, these can be set in the [Vercel web app](https://vercel.com/docs/serverless-functions/introduction#environment-variables).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Do not commit this project key into a git repo.
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy To Dos on Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This app can be easily deployed on [Vercel](https://vercel.com/).
+
