@@ -25,5 +25,7 @@ Do not commit this project key into a git repo.
 
 ## Deploy To Dos on Vercel
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/xeust/base-nextjs/)
+
 This app can be easily deployed on [Vercel](https://vercel.com/).
 
