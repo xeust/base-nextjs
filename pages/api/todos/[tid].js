@@ -1,8 +1,8 @@
 import { Deta } from 'deta';
 
-const deta = Deta(process.env.DETA_PROJECT_KEY);
+const deta = Deta();
 
-const base = deta.Base('todos');
+const base = deta.Base("todos");
 
 export default async (req, res) => {
 

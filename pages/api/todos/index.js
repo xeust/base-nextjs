@@ -3,7 +3,7 @@ import { Deta } from 'deta';
 
 const deta = Deta(process.env.DETA_PROJECT_KEY);
 
-const base = deta.Base('todos');
+const base = deta.Base("todos");
 
 export default async (req, res) => {
 
@@ -12,7 +12,7 @@ export default async (req, res) => {
 
   if (method === 'GET') {
 
-    const {value: items} = await base.fetch([]).next();
+    const { items } = await base.fetch();
     respBody = items;
     res.statusCode = 200;
 
